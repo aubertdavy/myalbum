@@ -12,8 +12,8 @@ interface AlbumDao {
     fun insertAll(albums: List<Album>)
 
     @Delete
-    fun delete(movie: Album)
+    fun delete(album: Album)
 
     @Delete
-    fun deleteAll(movie: List<Album>)
+    fun deleteAll(albums: List<Album>)
 }
