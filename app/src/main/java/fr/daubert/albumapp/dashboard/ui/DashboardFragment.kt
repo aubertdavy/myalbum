@@ -10,7 +10,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import fr.daubert.albumapp.adapters.AlbumAdapter
 import fr.daubert.albumapp.dashboard.DashboardViewModel
 import fr.daubert.albumapp.databinding.FragmentDashboardBinding
-import  fr.daubert.albumapp.data.Result
 
 @AndroidEntryPoint
 class DashboardFragment : Fragment() {
@@ -40,14 +39,12 @@ class DashboardFragment : Fragment() {
     }
 
     private fun subscribeUi() {
-        viewModel.albums.observe(viewLifecycleOwner) { result ->
-            when (result.status) {
-                Result.Status.SUCCESS, Result.Status.ERROR -> {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state.mode) {
+                DashboardViewModel.ScreenMode.NONE -> {
                     binding.loading.visibility = View.GONE
-                    result.data?.let {
-                        val adapter = AlbumAdapter(requireContext(), it)
-                        binding.rvAlbums.adapter = adapter
-                    }
+                    val adapter = AlbumAdapter(requireContext(), state.albums)
+                    binding.rvAlbums.adapter = adapter
                 }
                 else -> binding.loading.visibility = View.VISIBLE
             }

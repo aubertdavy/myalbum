@@ -1,7 +1,6 @@
 package fr.daubert.albumapp.data
 
 import androidx.room.*
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AlbumDao {
@@ -14,6 +13,6 @@ interface AlbumDao {
     @Delete
     fun delete(album: Album)
 
-    @Delete
-    fun deleteAll(albums: List<Album>)
+    @Query("DELETE FROM albums")
+    fun deleteAll()
 }

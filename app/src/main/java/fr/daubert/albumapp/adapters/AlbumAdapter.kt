@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import fr.daubert.albumapp.R
 import fr.daubert.albumapp.data.Album
 import fr.daubert.albumapp.databinding.ListItemAlbumBinding
 
@@ -26,12 +26,10 @@ class AlbumAdapter(
             with(albums[position]) {
                 binding.tvTitle.text = this.title
 
-              //  if (this.thumbnailUrl.isNullOrEmpty()) {
-                    Glide.with(context)
-                        .load("https://st.depositphotos.com/1007752/4996/i/450/depositphotos_49965697-stock-photo-cursor-pointing-at-http-www.jpg")
-                        .centerInside()//this.thumbnailUrl)
-                        .into(binding.ivAlbum)
-               // }
+                Glide.with(context)
+                    .load(this.thumbnailUrl.isNullOrEmpty())
+                    .centerCrop().placeholder(R.drawable.placehoder)
+                    .into(binding.ivAlbum)
             }
         }
     }

@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.daubert.albumapp.data.Album
 import fr.daubert.albumapp.data.AlbumRepository
-import fr.daubert.albumapp.data.Result
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,8 +15,17 @@ class DashboardViewModel @Inject internal constructor(
     private val repository: AlbumRepository
 ) : ViewModel() {
 
-    private val _albums = MutableLiveData<Result<List<Album>>>()
-    val albums = _albums
+    enum class ScreenMode {
+        LOADING, NONE
+    }
+
+    data class State(
+        val albums: List<Album> = emptyList(),
+        val mode: ScreenMode = ScreenMode.NONE
+    )
+
+    private val _state = MutableLiveData<State>()
+    val state = _state
 
     init {
         fetchAlbums()
@@ -25,8 +33,12 @@ class DashboardViewModel @Inject internal constructor(
 
     private fun fetchAlbums() {
         viewModelScope.launch {
-            repository.fetchAlbums().collect {
-                _albums.value = it
+            _state.postValue(State(mode = ScreenMode.LOADING))
+            repository.getAlbums().collect {
+                _state.postValue(State(
+                    mode = ScreenMode.NONE,
+                    albums = it ?: emptyList()
+                ))
             }
         }
     }
